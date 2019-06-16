@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Home
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!userList">
+    <form [formGroup]="userForm" (ngSubmit)="addUser()">
+      <ion-item>
+        <ion-label>Name</ion-label>
+        <ion-input type="text" formControlName="name" [ngModel]="name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Mobile</ion-label>
+        <ion-input type="mobile" min="10" max="10" formControlName="mobile" [ngModel]="mobile"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Email</ion-label>
+        <ion-input type="email" formControlName="email" [ngModel]="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="file" (change)="changeListener($event)" formControlName="profile"></ion-input>
+      </ion-item>
+      <div text-center>
+        <img [src]="imgURL" height="200px" width="200px" *ngIf="imgURL" />
+      </div>
+
+      <div text-center>
+        <ion-button type="submit" [disabled]="!userForm.valid">Submit</ion-button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="userList">
+    <ion-item-sliding *ngFor="let data of userService.users,let i = index">
+      <ion-item>
+        <ion-thumbnail slot="start">
+          <img [src]="data.profile">
+        </ion-thumbnail>
+        {{data.name}}<br>
+        {{data.email}}
+      </ion-item>
+      <ion-item-options side="end" class="slide-button">
+        <ion-button color="danger" (click)="delete(i)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+        <ion-button color="primary" (click)="edit(data,i)">
+          <ion-icon color="light" name="create"></ion-icon>
+        </ion-button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-fab-button (click)="change()" *ngIf="userList">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-button (click)="change()" *ngIf="!userList">
+    <ion-icon name="arrow-back"></ion-icon>
+  </ion-fab-button>
+</ion-footer>
